@@ -1,10 +1,9 @@
-#!/usr/bin/pypy
+#!/usr/bin/env python
 # By Junjun Mao
+# Before simplifying: user 1min45.673s 1m50.403s
+
 import sys
 
-# uncomment the following two lines if you have psyco installed. It speeds up the solver significantly
-#import psyco
-#psyco.full()
 
 def conflict(test):
     flags=[0 for i in range(9)]
@@ -32,8 +31,8 @@ class BOARD:
     def write(self):
         for i in range(9):
             for j in range(9):
-                print "%2d"%self.unit[i][j],
-            print
+                print("%2d" % self.unit[i][j], end="")
+            print()
         return
     def zeros(self):
         count=0
@@ -57,21 +56,24 @@ class BOARD:
                 for k in range(3):
                     for l in range(3):
                         test.append(self.unit[i*3+k][j*3+l])
-                if conflict(test): return False
+                if conflict(test):
+                    return False
         
         #Validify row
         for i in range(9):
             test=[]
             for j in range(9):
                 test.append(self.unit[i][j])
-            if conflict(test): return False
+            if conflict(test):
+                return False
             
         #Validify column
         for i in range(9):
             test=[]
             for j in range(9):
                 test.append(self.unit[j][i])
-            if conflict(test): return False
+            if conflict(test):
+                return False
         return True
     
 def min_cell(board):
@@ -122,6 +124,7 @@ def all_perms(str):
         for perm in all_perms(str[1:]):
             for i in range(len(perm)+1):
                 yield perm[:i] + str[0:1] + perm[i:]
+
 
 def spawn(board):
     Min, Min_cell = min_cell(board)
@@ -175,7 +178,7 @@ def spawn(board):
     
 if __name__=="__main__":
     if len(sys.argv) < 2:
-        print "sokudo.py fname"
+        print("sokudo.py fname")
         sys.exit(0)
 
     Q=[]
@@ -183,9 +186,10 @@ if __name__=="__main__":
     
     board=BOARD()
     board.load(sys.argv[1])
-    if board.valid(): Q.append(board)
+    if board.valid():
+        Q.append(board)
     else:
-        print "Input game is not valid."
+        print("Input game is not valid.")
         sys.exit(0)
     
     count = 0
@@ -195,10 +199,10 @@ if __name__=="__main__":
         zeros=motherboard.zeros()
         if zeros == 0:
             motherboard.write()
-            print
-            #solutions.append(motherboard)
-            continue
-        # print "Cycle %d: Q = %d, to be filled = %d" % (count,len(Q), zeros) 
+            print()
+            break
+
+        #print("Cycle %d: Q = %d, to be filled = %d" % (count,len(Q), zeros))
         #motherboard.write()
         raw=spawn(motherboard)
         for new_board in raw:

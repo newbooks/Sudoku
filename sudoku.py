@@ -4,7 +4,6 @@
 import sys
 
 
-
 class BOARD:
     def __init__(self):
         self.cell = [[0 for j in range(9)] for i in range(9)]
